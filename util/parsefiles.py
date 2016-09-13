@@ -7,7 +7,8 @@ import networkx as nx
 from collections import namedtuple
 import argparse
 
-TRAVIS_BUILD_DIR = os.environ.get("TRAVIS_BUILD_DIR")
+#TRAVIS_BUILD_DIR = os.environ.get("TRAVIS_BUILD_DIR")
+TRAVIS_BUILD_DIR = os.getcwd()
 DOCKER_PATH_ROOT = pathlib2.Path(TRAVIS_BUILD_DIR, "docker", "build")
 CONFIG_FILE_PATH = pathlib2.Path(TRAVIS_BUILD_DIR, "util", "parsefiles_config.yml")
 LOGGER = logging.getLogger(__name__)

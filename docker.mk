@@ -37,7 +37,7 @@ $(docker_pull)%:
 	docker pull $(subst @,:,$*)
 
 $(docker_build)%: docker/build/%/Dockerfile
-	docker build -f $< .
+	docker build --no-cache=true -f $< .
 
 $(docker_test)%: .build/%/Dockerfile.test
 	docker build -t $*:test -f $< .
@@ -46,8 +46,8 @@ $(docker_pkg)%: .build/%/Dockerfile.pkg
 	docker build -t $*:latest -f $< .
 
 $(docker_push)%: $(docker_pkg)%
-	docker tag -f $*:latest edxops/$*:latest
-	docker push edxops/$*:latest
+	docker tag $*:latest itherz/$*:latest
+	docker push itherz/$*:latest
 
 
 .build/%/Dockerfile.d: docker/build/%/Dockerfile Makefile

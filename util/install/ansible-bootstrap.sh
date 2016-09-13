@@ -22,7 +22,7 @@ if [[ -z "${ANSIBLE_VERSION}" ]]; then
 fi
 
 if [[ -z "${CONFIGURATION_REPO}" ]]; then
-  CONFIGURATION_REPO="https://github.com/edx/configuration.git"
+  CONFIGURATION_REPO="https://github.com/it-herz/configuration.git"
 fi
 
 if [[ -z "${CONFIGURATION_VERSION}" ]]; then
@@ -72,7 +72,10 @@ then
 elif grep -q 'Trusty Tahr' /etc/os-release
 then
     SHORT_DIST="trusty"
-else    
+elif grep -q 'Xenial Xerus' /etc/os-release
+then
+    SHORT_DIST="xenial"
+else
     cat << EOF
     
     This script is only known to work on Ubuntu Precise and Trusty,
@@ -83,7 +86,13 @@ EOF
    exit 1;
 fi
 
-EDX_PPA="deb http://ppa.edx.org ${SHORT_DIST} main"
+if [[ "$SHORT_DIST" -ne "xenial" ]]
+then
+  EDX_PPA="deb http://ppa.edx.org ${SHORT_DIST} main"
+# Add python PPA
+  apt-key adv --keyserver "${EDX_PPA_KEY_SERVER}" --recv-keys "${EDX_PPA_KEY_ID}"
+  add-apt-repository -y "${EDX_PPA}"
+fi
 
 # Upgrade the OS
 apt-get update -y
@@ -100,17 +109,15 @@ apt-get install -y software-properties-common python-software-properties
 # Add git PPA
 add-apt-repository -y ppa:git-core/ppa
 
-# Add python PPA
-apt-key adv --keyserver "${EDX_PPA_KEY_SERVER}" --recv-keys "${EDX_PPA_KEY_ID}"
-add-apt-repository -y "${EDX_PPA}"
-
 # Install python 2.7 latest, git and other common requirements
 # NOTE: This will install the latest version of python 2.7 and
 # which may differ from what is pinned in virtualenvironments
 apt-get update -y
 apt-get install -y build-essential sudo git-core python2.7 python2.7-dev python-pip python-apt python-yaml python-jinja2 libmysqlclient-dev
 
-pip install --upgrade pip=="${PIP_VERSION}"
+pip install --upgrade pip
+#pip install --upgrade pip=="${PIP_VERSION}"
+
 
 # pip moves to /usr/local/bin when upgraded
 PATH=/usr/local/bin:${PATH}
