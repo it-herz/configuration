@@ -5,7 +5,7 @@ import itertools
 import sys
 
 # TRAVIS_BUILD_DIR = os.environ.get("TRAVIS_BUILD_DIR")
-TRAVIS_BUILD_DIR = "/root/edx/configuration"
+TRAVIS_BUILD_DIR = os.getcwd()
 CONFIG_FILE_PATH = pathlib2.Path(TRAVIS_BUILD_DIR, "util", "parsefiles_config.yml")
 
 def get_used_images(images):

@@ -86,6 +86,8 @@ EOF
    exit 1;
 fi
 
+
+
 # Upgrade the OS
 apt-get update -y
 apt-key update -y
@@ -98,14 +100,13 @@ fi
 # Required for add-apt-repository
 apt-get install -y software-properties-common python-software-properties
 
-#if [ "$SHORT_DIST" -ne "xenial" ]
-#then
+if [[ "$SHORT_DIST" != "xenial" ]]
+then
   EDX_PPA="deb http://ppa.edx.org ${SHORT_DIST} main"
 # Add python PPA
   apt-key adv --keyserver "${EDX_PPA_KEY_SERVER}" --recv-keys "${EDX_PPA_KEY_ID}"
-  add-apt-repository -y "${EDX_PPA}"
-#fi
-
+  add-apt-repository -y "${EDX_PPA}"/
+fi
 
 # Add git PPA
 add-apt-repository -y ppa:git-core/ppa
@@ -116,8 +117,8 @@ add-apt-repository -y ppa:git-core/ppa
 apt-get update -y
 apt-get install -y build-essential sudo git-core python2.7 python2.7-dev python-pip python-apt python-yaml python-jinja2 libmysqlclient-dev
 
-#pip install --upgrade pip
-pip install --upgrade pip=="${PIP_VERSION}"
+pip install --upgrade pip
+#pip install --upgrade pip=="${PIP_VERSION}"
 
 
 # pip moves to /usr/local/bin when upgraded
@@ -133,6 +134,7 @@ PATH="${PYTHON_BIN}":${PATH}
 # Install the configuration repository to install 
 # edx_ansible role
 git clone ${CONFIGURATION_REPO} ${CONFIGURATION_DIR}
+pip install yaml
 cd ${CONFIGURATION_DIR}
 git checkout ${CONFIGURATION_VERSION}
 make requirements
