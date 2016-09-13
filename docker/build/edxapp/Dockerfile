@@ -1,5 +1,5 @@
-FROM edxops/precise-common:latest
-MAINTAINER edxops
+FROM itherz/trusty-common:latest
+MAINTAINER edxops, Dmitrii Zolotov <dzolotov@herzen.spb.ru>
 
 USER root
 RUN apt-get update
